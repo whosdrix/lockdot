@@ -13,6 +13,8 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    ignore:
+      - dependency-name: dtolnay/rust-toolchain
     groups:
       actions:
         patterns: ["*"]
