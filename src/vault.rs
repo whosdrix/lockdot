@@ -213,7 +213,7 @@ impl Unlocked {
             bail!("a lockdot file needs at least one member");
         }
         let mut data_key = Zeroizing::new([0u8; 32]);
-        getrandom::getrandom(data_key.as_mut()).map_err(|e| anyhow!("no randomness: {e}"))?;
+        getrandom::fill(data_key.as_mut()).map_err(|e| anyhow!("no randomness: {e}"))?;
         let mut unlocked = Unlocked {
             vault: Vault {
                 members,
@@ -236,11 +236,12 @@ impl Unlocked {
     }
 
     fn cipher(&self) -> XChaCha20Poly1305 {
-        XChaCha20Poly1305::new(self.subkey(b"lockdot v1 values").as_ref().into())
+        XChaCha20Poly1305::new_from_slice(self.subkey(b"lockdot v1 values").as_ref())
+            .expect("32-byte key")
     }
 
     fn mac_state(&self) -> Hmac<Sha256> {
-        <Hmac<Sha256> as Mac>::new_from_slice(self.subkey(b"lockdot v1 mac").as_ref())
+        <Hmac<Sha256> as KeyInit>::new_from_slice(self.subkey(b"lockdot v1 mac").as_ref())
             .expect("HMAC accepts any key length")
     }
 
@@ -273,13 +274,13 @@ impl Unlocked {
 
     fn seal(&self, key: &str, value: &str) -> Result<String> {
         let mut nonce = [0u8; 24];
-        getrandom::getrandom(&mut nonce).map_err(|e| anyhow!("no randomness: {e}"))?;
+        getrandom::fill(&mut nonce).map_err(|e| anyhow!("no randomness: {e}"))?;
         let padded = Zeroizing::new(pad(value.as_bytes()));
         let aad = format!("{VALUE_PREFIX}{key}");
         let ct = self
             .cipher()
             .encrypt(
-                XNonce::from_slice(&nonce),
+                &XNonce::from(nonce),
                 Payload {
                     msg: &padded,
                     aad: aad.as_bytes(),
@@ -302,7 +303,7 @@ impl Unlocked {
         let mut padded = self
             .cipher()
             .decrypt(
-                XNonce::from_slice(nonce),
+                &XNonce::try_from(nonce).expect("24-byte nonce"),
                 Payload {
                     msg: ct,
                     aad: aad.as_bytes(),
@@ -476,7 +477,7 @@ impl Unlocked {
 
     pub fn rotate(&mut self) -> Result<()> {
         let vars = self.vars()?;
-        getrandom::getrandom(self.data_key.as_mut()).map_err(|e| anyhow!("no randomness: {e}"))?;
+        getrandom::fill(self.data_key.as_mut()).map_err(|e| anyhow!("no randomness: {e}"))?;
         let resealed: Vec<(String, String)> = vars
             .iter()
             .map(|(k, v)| Ok((k.clone(), self.seal(k, v)?)))

@@ -10,13 +10,14 @@ pub fn fetch_keys(user: &str) -> Result<Vec<(String, Recipient)>> {
     let base = std::env::var("LOCKDOT_GITHUB_URL").unwrap_or_else(|_| "https://github.com".into());
     let url = format!("{}/{user}.keys", base.trim_end_matches('/'));
     let body = ureq::get(&url)
-        .set("User-Agent", concat!("lockdot/", env!("CARGO_PKG_VERSION")))
+        .header("User-Agent", concat!("lockdot/", env!("CARGO_PKG_VERSION")))
         .call()
         .map_err(|e| match e {
-            ureq::Error::Status(404, _) => anyhow::anyhow!("GitHub user `{user}` not found"),
+            ureq::Error::StatusCode(404) => anyhow::anyhow!("GitHub user `{user}` not found"),
             other => anyhow::anyhow!("fetching {url}: {other}"),
         })?
-        .into_string()
+        .into_body()
+        .read_to_string()
         .context("reading GitHub response")?;
     Ok(parse_keys(&body))
 }

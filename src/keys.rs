@@ -114,7 +114,9 @@ pub fn load_keyring() -> Result<Keyring> {
         }
         identities.extend(
             file.into_identities()
-                .map_err(|e| anyhow!("{}: {e}", path.display()))?,
+                .map_err(|e| anyhow!("{}: {e}", path.display()))?
+                .into_iter()
+                .map(|i| i as Box<dyn age::Identity>),
         );
         sources.push(path.display().to_string());
     }
