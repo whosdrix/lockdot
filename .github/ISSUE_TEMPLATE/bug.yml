@@ -1,0 +1,23 @@
+name: Bug report
+description: Something doesn't work
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: What happened
+      description: Include the command you ran and its full output. Never paste secret values or secret keys.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What you expected
+  - type: input
+    attributes:
+      label: lockdot version
+      description: Output of `lockdot --version`
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: OS
+      placeholder: macOS 15, Ubuntu 24.04, Windows 11...
