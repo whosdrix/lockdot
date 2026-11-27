@@ -137,15 +137,17 @@ lockdot remove-member github:alice
 
 ### CI
 
-Create a key for CI and add it as a member:
+Create a separate key for CI and add it as a member:
 
 ```sh
-lockdot add-member age1... --name ci
+LOCKDOT_IDENTITY_FILE=ci-key.txt lockdot whoami --age   # prints the public key
+lockdot -e prod add-member age1... --name ci
 ```
 
-Then put the secret key (`AGE-SECRET-KEY-...`) in your CI secrets as `LOCKDOT_KEY`:
+Copy the `AGE-SECRET-KEY-...` line from `ci-key.txt` into your CI secrets as `LOCKDOT_KEY`, then delete the file.
 
 ```yaml
+- run: curl -LsSf https://github.com/whosdrix/lockdot/releases/latest/download/lockdot-installer.sh | sh
 - run: lockdot run -e prod -- npm run build
   env:
     LOCKDOT_KEY: ${{ secrets.LOCKDOT_KEY }}
