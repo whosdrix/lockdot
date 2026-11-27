@@ -1,0 +1,13 @@
+[workspace]
+members = ["cargo:."]
+
+[dist]
+cargo-dist-version = "0.34.0"
+ci = "github"
+installers = ["shell", "powershell", "homebrew"]
+tap = "whosdrix/homebrew-tap"
+publish-jobs = ["homebrew"]
+formula = "lockdot"
+targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "aarch64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc"]
+install-path = "CARGO_HOME"
+install-updater = false

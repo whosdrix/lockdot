@@ -32,6 +32,10 @@ brew install whosdrix/tap/lockdot
 cargo install lockdot
 ```
 
+```sh
+curl -LsSf https://github.com/whosdrix/lockdot/releases/latest/download/lockdot-installer.sh | sh
+```
+
 Or grab a prebuilt binary for macOS, Linux or Windows from [Releases](https://github.com/whosdrix/lockdot/releases).
 
 ## Why
