@@ -40,6 +40,13 @@ Or grab a prebuilt binary for macOS, Linux or Windows from [Releases](https://gi
 
 ## Why
 
+<p align="center">
+  <img src=".github/assets/commit.png" width="49%" alt="Commit your secrets: values are encrypted, names stay readable">
+  <img src=".github/assets/share.png" width="49%" alt="Share by GitHub username">
+  <img src=".github/assets/run.png" width="49%" alt="Never written to disk: lockdot run">
+  <img src=".github/assets/revoke.png" width="49%" alt="Revoke in one command">
+</p>
+
 | | lockdot | `.env` in Slack | sops | git-crypt |
 |---|:-:|:-:|:-:|:-:|
 | Lives in git, versioned with the code | ✓ | | ✓ | ✓ |

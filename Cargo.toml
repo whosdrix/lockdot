@@ -10,7 +10,7 @@ homepage = "https://github.com/whosdrix/lockdot"
 readme = "README.md"
 keywords = ["dotenv", "secrets", "encryption", "age", "cli"]
 categories = ["command-line-utilities", "cryptography", "development-tools"]
-exclude = ["assets/", ".github/"]
+exclude = ["assets/", ".github/", "dist-workspace.toml"]
 
 [dependencies]
 age = { version = "0.12", features = ["ssh", "armor", "cli-common"] }
