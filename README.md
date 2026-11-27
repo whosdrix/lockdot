@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/demo.gif" alt="lockdot demo: encrypt a .env, add a teammate from GitHub, rotate a key, see a readable diff, run a command" width="760">
+  <img src="https://raw.githubusercontent.com/whosdrix/lockdot/main/assets/demo.gif" alt="lockdot demo: encrypt a .env, add a teammate from GitHub, rotate a key, see a readable diff, run a command" width="760">
 </p>
 
 Your secrets live in the repo next to the code, encrypted. Variable names stay readable, so pull requests and `git diff` still make sense. Teammates get access with their GitHub username, and nobody pastes keys into Slack again.
@@ -77,7 +77,8 @@ The full threat model is in [SECURITY.md](SECURITY.md).
 `lockdot init` creates your key at `~/.config/lockdot/identity.txt` if you don't have one. lockdot also uses `~/.ssh/id_ed25519` and `~/.ssh/id_rsa`, so a teammate added with `github:username` needs no setup at all.
 
 ```sh
-lockdot whoami        # print your public key to share
+lockdot whoami        # the public key to send a teammate (your SSH key if you have one)
+lockdot whoami --age  # create and print a separate lockdot key instead
 ```
 
 ### Secrets

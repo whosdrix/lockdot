@@ -9,7 +9,16 @@ pub fn fetch_keys(user: &str) -> Result<Vec<(String, Recipient)>> {
     }
     let base = std::env::var("LOCKDOT_GITHUB_URL").unwrap_or_else(|_| "https://github.com".into());
     let url = format!("{}/{user}.keys", base.trim_end_matches('/'));
-    let body = ureq::get(&url)
+    let agent: ureq::Agent = ureq::Agent::config_builder()
+        .tls_config(
+            ureq::tls::TlsConfig::builder()
+                .root_certs(ureq::tls::RootCerts::PlatformVerifier)
+                .build(),
+        )
+        .build()
+        .into();
+    let body = agent
+        .get(&url)
         .header("User-Agent", concat!("lockdot/", env!("CARGO_PKG_VERSION")))
         .call()
         .map_err(|e| match e {

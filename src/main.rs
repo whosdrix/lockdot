@@ -41,7 +41,11 @@ enum Cmd {
         from: Option<PathBuf>,
     },
     /// Print your public key, to share with a teammate
-    Whoami,
+    Whoami {
+        /// Create a lockdot key even if you have an SSH key
+        #[arg(long)]
+        age: bool,
+    },
     /// Set a variable (reads the value from stdin when omitted)
     Set { name: String, value: Option<String> },
     /// Print one decrypted value
@@ -295,7 +299,22 @@ fn run(cli: Cli, ui: &Ui) -> Result<ExitCode> {
             eprintln!("  git add {}", path.display());
         }
 
-        Cmd::Whoami => {
+        Cmd::Whoami { age } => {
+            let existing = keys::load_keyring()?;
+            let ssh =
+                (existing.public.is_none() && !age && std::env::var_os("LOCKDOT_NO_SSH").is_none())
+                    .then(keys::ssh_public_key)
+                    .flatten();
+            if let Some(ssh) = ssh {
+                println!("{ssh}");
+                if io::stderr().is_terminal() {
+                    eprintln!(
+                        "{}",
+                        ui.dim("This is your SSH key. Run `lockdot whoami --age` for a separate lockdot key.")
+                    );
+                }
+                return Ok(ExitCode::SUCCESS);
+            }
             let (keyring, pk) = ensure_identity(ui)?;
             println!("{pk}");
             if io::stderr().is_terminal() {
