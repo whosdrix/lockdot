@@ -4,7 +4,15 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      crypto:
+        patterns: ["age", "chacha20poly1305", "hmac", "hkdf", "sha2", "getrandom", "zeroize"]
+      everything-else:
+        patterns: ["*"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
