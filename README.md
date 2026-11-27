@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/whosdrix/lockdot/main/assets/demo.gif" alt="lockdot demo: encrypt a .env, add a teammate from GitHub, rotate a key, see a readable diff, run a command" width="760">
+  <img src="assets/demo.gif" alt="lockdot demo: encrypt a .env, add a teammate from GitHub, rotate a key, see a readable diff, run a command" width="760">
 </p>
 
 Your secrets live in the repo next to the code, encrypted. Variable names stay readable, so pull requests and `git diff` still make sense. Teammates get access with their GitHub username, and nobody pastes keys into Slack again.
